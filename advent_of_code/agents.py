@@ -1,11 +1,16 @@
 import controlflow as cf
 
-from advent_of_code.solver.tools import execute_python
+from advent_of_code.tools import execute_python_subprocess
+from langchain_openai import ChatOpenAI
+
+# MODEL = "openai/o1"
+MODEL = ChatOpenAI(model="o1")
 
 PROGRAMMER = cf.Agent(
     name="Programmer",
     instructions="Write python scripts to solve complex programming problems.",
     description="Writes python code",
+    model=MODEL
 )
 
 TESTER = cf.Agent(
@@ -18,7 +23,8 @@ TESTER = cf.Agent(
             "Identify possible testing scenarios that can identify potential problems",
         )
     ),
-    tools=[execute_python],
+    tools=[execute_python_subprocess],
+    model=MODEL
 )
 
 PLANNER = cf.Agent(
@@ -27,9 +33,10 @@ PLANNER = cf.Agent(
     instructions="\n".join(
         (
             "Decompose a complex problem into simple tasks",
-            "Identify which agents are most qualified to address subtasks",
+            "Identify functionality required to implement simple tasks"
         )
     ),
+    model=MODEL
 )
 
 INPUT_PARSER = cf.Agent(
@@ -41,6 +48,7 @@ INPUT_PARSER = cf.Agent(
             "validate that code will correctly parse the inputs produce the required outputs",
         )
     ),
+    model=MODEL
 )
 
 CODE_OPTIMIZER = cf.Agent(
@@ -54,6 +62,7 @@ CODE_OPTIMIZER = cf.Agent(
             "Where appropriate apply parallelism to improve software performance",
         )
     ),
+    model=MODEL
 )
 
 DEBUGGER = cf.Agent(
@@ -63,6 +72,7 @@ DEBUGGER = cf.Agent(
     Identify and remove software bugs in software.
     Preserve the intended functionality as much as possible
     """,
+    model=MODEL
 )
 
 VALIDATOR = cf.Agent(
@@ -73,4 +83,5 @@ VALIDATOR = cf.Agent(
         Accept any feedback that they give and incorporate it into the developed code.
         Ensure that the developed code has the required components for reading the input from a file.
     """,
+    model=MODEL
 )

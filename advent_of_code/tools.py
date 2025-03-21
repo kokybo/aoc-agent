@@ -1,13 +1,34 @@
 import sys
 import io
-import time
+import traceback
+import tempfile
+import subprocess
+import os
 
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 
 def run_in_process(code: str):
     exec(code)  # Execute the generated code
 
+
+def execute_python_subprocess(code: str):
+    _, file = tempfile.mkstemp()
+
+    with open(file, "w") as f:
+        f.write(code)
+
+    result = subprocess.run(
+        ["python", file],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False
+    )
+
+    os.remove(file)
+
+    return {"stdout": result.stdout, "stderr": result.stderr, "exit_code": result.returncode}
 
 def execute_python(code: str) -> str:
     """
@@ -16,18 +37,19 @@ def execute_python(code: str) -> str:
     output = io.StringIO()
     sys.stdout = output  # Redirect standard output
 
-    with ProcessPoolExecutor(1) as pool:
+    with ThreadPoolExecutor(1) as pool:
         future = pool.submit(run_in_process, code)
-        start = time.time()
-
-        while not future.done() and time.time() - start < 60.0:
-            time.sleep(2)
-
-        if not future.done():
+        try:
+            future.result(timeout=60.0)
+        except TimeoutError:
             pool.shutdown(wait=False)
             sys.stdout = sys.__stdout__
             raise TimeoutError("Process did not finish for 60 seconds.")
-
+        except Exception:
+            error = traceback.format_exc()
+            sys.stdout = sys.__stdout__
+            return error
+        
     sys.stdout = sys.__stdout__
     captured_output = output.getvalue()
     output.close()
