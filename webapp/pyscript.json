@@ -1,0 +1,15 @@
+{
+    "name": "PuePy Tutorial",
+    "debug": true,
+    "files": {},
+    "js_modules": {
+      "main": {
+        "https://cdn.jsdelivr.net/npm/morphdom@2.7.4/+esm": "morphdom"
+      }
+    },
+    "packages": [
+      "puepy",
+      "requests",
+      "pyodide-http"
+    ]
+  }

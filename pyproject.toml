@@ -1,19 +1,22 @@
-[tool.poetry]
-name = "advent_of_code"
+[project]
+name = "pyapp"
 version = "0.1.0"
 description = ""
-authors = []
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
 readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.12"
-tqdm = "^4.67.1"
-pydantic = "^2.10.3"
-openai = "^1.58.1"
-controlflow = "^0.11.4"
-python-dotenv = "^1.0.1"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "puepy (>=0.6.5,<0.7.0)",
+    "fastapi (>=0.115.11,<0.116.0)",
+    "uvicorn (>=0.34.0,<0.35.0)",
+    "controlflow (>=0.12.1,<0.13.0)",
+    "pyodide-http (>=0.2.2,<0.3.0)",
+    "python-dotenv (>=1.0.1,<2.0.0)"
+]
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

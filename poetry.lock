@@ -503,14 +503,14 @@ files = [
 
 [[package]]
 name = "controlflow"
-version = "0.11.4"
+version = "0.12.1"
 description = "A framework for building agentic LLM workflows"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "controlflow-0.11.4-py3-none-any.whl", hash = "sha256:0bc5e8e7d6bdba2e693041d5b55af612d29a8c009f120f24faf4e562d5064eb2"},
-    {file = "controlflow-0.11.4.tar.gz", hash = "sha256:01ba330a4f6cf3cbd04f85c28e2f4d8a67888f56d57a6be386d05dc73507e8bb"},
+    {file = "controlflow-0.12.1-py3-none-any.whl", hash = "sha256:e9ea4aa2d3f2f48477e5555c9e9b23ca8f20f480def2fd18c4963faf3cc26ec0"},
+    {file = "controlflow-0.12.1.tar.gz", hash = "sha256:74f8b06932a7f0a3b13730f7e793cd36b5f0e13593ed985887e221243e7c232f"},
 ]
 
 [package.dependencies]
@@ -529,7 +529,7 @@ typer = ">=0.10"
 
 [package.extras]
 dev = ["controlflow[tests]", "ipython", "mypy", "pdbpp", "pre-commit", "ruff (>=0.3.4)", "textual-dev"]
-tests = ["chromadb", "duckduckgo-search", "langchain_community", "langchain_google_genai", "langchain_groq", "pytest (>=7.0)", "pytest-asyncio (>=0.18.2,!=0.22.0,<0.23.0)", "pytest-env (>=0.8,<2.0)", "pytest-rerunfailures (>=10,<14)", "pytest-sugar (>=0.9,<2.0)", "pytest-timeout", "pytest-xdist"]
+tests = ["chromadb", "duckduckgo-search", "langchain-ollama", "langchain_community", "langchain_google_genai", "langchain_groq", "pytest (>=7.0)", "pytest-asyncio (>=0.18.2,!=0.22.0,<0.23.0)", "pytest-env (>=0.8,<2.0)", "pytest-rerunfailures (>=10,<14)", "pytest-sugar (>=0.9,<2.0)", "pytest-timeout", "pytest-xdist"]
 
 [[package]]
 name = "coolname"
@@ -1935,14 +1935,14 @@ type = ["mypy (>=1.14.1)"]
 
 [[package]]
 name = "prefect"
-version = "3.2.13"
+version = "3.2.14"
 description = "Workflow orchestration and management."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "prefect-3.2.13-py3-none-any.whl", hash = "sha256:f9cdc043c6ca69e238387eca30dc75072301859d6b6df23a69c6021ba292e48b"},
-    {file = "prefect-3.2.13.tar.gz", hash = "sha256:3492f7293bd2233517d4931afcb7e9c76533b0082a8d4fe66e7767906d9ebd30"},
+    {file = "prefect-3.2.14-py3-none-any.whl", hash = "sha256:f985d06be2bd81b826cea4aa53b022abf2f53a27e8b1cabaaaf6ae3ba39c2de2"},
+    {file = "prefect-3.2.14.tar.gz", hash = "sha256:0e63e98a29712a9f2e6a471124668fd400f802e3ab7b5a2493987b6dbe53dad1"},
 ]
 
 [package.dependencies]
@@ -2062,6 +2062,18 @@ markers = "sys_platform != \"win32\" and sys_platform != \"emscripten\""
 files = [
     {file = "ptyprocess-0.7.0-py2.py3-none-any.whl", hash = "sha256:4b41f3967fce3af57cc7e94b888626c18bf37a083e3651ca8feeb66d492fef35"},
     {file = "ptyprocess-0.7.0.tar.gz", hash = "sha256:5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"},
+]
+
+[[package]]
+name = "puepy"
+version = "0.6.5"
+description = "Frontend Framework for PyScript"
+optional = false
+python-versions = "<4.0,>=3.9"
+groups = ["main"]
+files = [
+    {file = "puepy-0.6.5-py3-none-any.whl", hash = "sha256:d41e19193b39c01d4af87656bd3335bdcf23c48c4b6f79e0f3c50b6581e7f711"},
+    {file = "puepy-0.6.5.tar.gz", hash = "sha256:5145fc9d7a7b7762327979d31d9a16a9dbb2389a5092ac78db45935d9b92f5bf"},
 ]
 
 [[package]]
@@ -2284,6 +2296,18 @@ files = [
 
 [package.extras]
 windows-terminal = ["colorama (>=0.4.6)"]
+
+[[package]]
+name = "pyodide-http"
+version = "0.2.2"
+description = "Patch requests, urllib and urllib3 to make them work in Pyodide"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "pyodide_http-0.2.2-py3-none-any.whl", hash = "sha256:cf006ea593c1643b5badeb4d42ed24a6eebd830276171fa1f82de0777b3fb608"},
+    {file = "pyodide_http-0.2.2.tar.gz", hash = "sha256:d98132c664a621c950d4d795fa013b763b0ebc223f6107d06483b736802b61c0"},
+]
 
 [[package]]
 name = "python-dateutil"
@@ -3737,5 +3761,5 @@ cffi = ["cffi (>=1.11)"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = "^3.12"
-content-hash = "c1a72c4110f180af191fa8e61679de83ff9d3d2059fc37c5f74b02d208cba886"
+python-versions = ">=3.12,<4.0"
+content-hash = "d07ee3e92ed7c3bf9778a840999cd86eaddfbe4708eea75a951c944b7e2ccdcf"
