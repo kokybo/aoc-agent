@@ -4,7 +4,7 @@ from advent_of_code.tools import execute_python_subprocess
 from langchain_openai import ChatOpenAI
 
 # MODEL = "openai/o1"
-MODEL = ChatOpenAI(model="o1")
+MODEL = ChatOpenAI(model="o3-mini")
 
 PROGRAMMER = cf.Agent(
     name="Programmer",

@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+
 load_dotenv()
 
 import argparse
@@ -10,25 +11,26 @@ import json
 from advent_of_code import agents
 from advent_of_code.tools import execute_python_subprocess
 
+
 class AcceptanceStatus(BaseModel):
     """
-        This class provides a mechanism to indicate if a solution passes acceptance testing.
-        If a solution fails acceptance testing then the error can be detailed as well
+    This class provides a mechanism to indicate if a solution passes acceptance testing.
+    If a solution fails acceptance testing then the error can be detailed as well
     """
+
     passed: bool
     error: str = ""
     reason: str = ""
+
 
 @cf.flow()
 def solve_problem(problem: str, max_iter: int = 3) -> str:
     solution_context = {"problem": problem}
     task_plan = cf.run(
         "Develop a list of tasks that need to be accomplished in order to solve the problem",
-        agents=[
-            agents.PLANNER
-        ],
+        agents=[agents.PLANNER],
         context=solution_context,
-        result_type=list[str]
+        result_type=list[str],
     )
 
     solution_context["task_plan"] = task_plan
@@ -38,7 +40,7 @@ def solve_problem(problem: str, max_iter: int = 3) -> str:
         instructions="""
         Only return the expected output value and nothing else
         """,
-        context=solution_context
+        context=solution_context,
     )
 
     code = cf.run(
@@ -46,12 +48,11 @@ def solve_problem(problem: str, max_iter: int = 3) -> str:
         instructions="""
         Solutions should be designed to complete within 5 minutes.
         Only return the code that you wrote, no other information or commentary.
+        Please include the inputs as a string literal in the puzzle.
         """,
-        agents=[
-            agents.PROGRAMMER
-        ],
+        agents=[agents.PROGRAMMER],
         context=solution_context,
-        result_type=str
+        result_type=str,
     )
 
     solution_context["code"] = code
@@ -68,11 +69,9 @@ def solve_problem(problem: str, max_iter: int = 3) -> str:
             If you accept the solution please indicate your reason for accepting the solution as correct.
             Ensure that the standard output from running the solution contains the expected result from the problem statement.
             """,
-            agents=[
-                agents.TESTER
-            ],
+            agents=[agents.TESTER],
             context=solution_context,
-            result_type=AcceptanceStatus
+            result_type=AcceptanceStatus,
         )
 
         result = execute_python_subprocess(solution_context["code"])
@@ -90,15 +89,11 @@ def solve_problem(problem: str, max_iter: int = 3) -> str:
                 You may request help from the user if more information is required in your debugging.
                 Identify and correct any logic bugs that you encounter in the code
                 """,
-                agents=[
-                    agents.DEBUGGER,
-                    agents.PROGRAMMER,
-                    agents.CODE_OPTIMIZER
-                ],
+                agents=[agents.DEBUGGER, agents.PROGRAMMER, agents.CODE_OPTIMIZER],
                 result_type=str,
                 turn_strategy=cf.orchestration.turn_strategies.Popcorn(),
                 interactive=True,
-                context=solution_context
+                context=solution_context,
             )
 
             solution_context["code"] = new_code
@@ -109,9 +104,10 @@ def solve_problem(problem: str, max_iter: int = 3) -> str:
 
     with open("debug.json", "w") as f:
         solution_context["iterations"] = iterations
-        json.dump(solution_context,f, indent=2)
+        json.dump(solution_context, f, indent=2)
 
     return solution_context["code"]
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
