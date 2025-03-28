@@ -1,14 +1,17 @@
+from typing import Any
 from puepy import Application, Page, t
 from puepy.runtime import setTimeout, create_proxy
-import pyodide_http
-pyodide_http.patch_all()
-
-import requests
-import json
-
+from pyscript import fetch
+from json import dumps
 
 app = Application()
 
+
+async def post(url: str, json: dict[str, Any]) -> dict[str, Any]:
+    response = await fetch(url, method="POST", body=dumps(json), headers={"Content-Type":"application/json"})
+    body = await response.json()
+    print(body)
+    return body
 
 @app.page()
 class HelloWorldPage(Page):
@@ -93,7 +96,6 @@ class HelloWorldPage(Page):
                                         t.p(self.state["output"]["stderr"], classes="card-text")
                                     else:
                                         t.p(self.state["output"]["stdout"], classes="card-text")
-               
 
     def solve_button_click(self, event):
         self.state['stage'] = "Task Planning"
@@ -101,39 +103,39 @@ class HelloWorldPage(Page):
     def on_stage_change(self, event):
         setTimeout(create_proxy(self._do_next_stage), 100)
 
-    def _do_next_stage(self):
+    async def _do_next_stage(self):
         stage = self.state['stage']
 
         if stage == "Task Planning":
-            self.state["task_plan"] = requests.post("http://localhost:8000/generate_task_plan", json={"problem": self.state["problem"]}).json()
+            self.state["task_plan"] = await post("http://localhost:8000/generate_task_plan", json={"problem": self.state["problem"]})
             self.update_stage("Extracting Output")
 
         elif stage == "Extracting Output":
-            self.state["expected_output"] = requests.post("http://localhost:8000/extract_solution", json={"problem":self.state['problem']}).json()['solution']
+            self.state["expected_output"] = (await post("http://localhost:8000/extract_solution", json={"problem":self.state['problem']}))['solution']
             self.update_stage("Generating Code")
 
         elif stage == "Generating Code":
-            self.state['code'] = requests.post('http://localhost:8000/generate_code', json={"problem": self.state["problem"], "expected_output":self.state["expected_output"]}).json()["code"]
+            self.state['code'] = (await post('http://localhost:8000/generate_code', json={"problem": self.state["problem"], "expected_output":self.state["expected_output"]}))["code"]
             self.update_stage("Testing Code")
 
         elif stage == "Testing Code" and not self.state['complete']:
-            self.state['test_result'] = requests.post("http://localhost:8000/test_solution", json={
+            self.state['test_result'] = await post("http://localhost:8000/test_solution", json={
                 "problem": self.state["problem"],
                 "expected_output": self.state["expected_output"],
                 "code": self.state["code"]
-            }).json()
+            })
 
             if self.state['test_result']["passed"] or self.state["iterations"] >= 3:
                 self.update_stage("Complete")
             else:
                 self.update_stage("Debugging")
         elif stage == "Debugging" and not self.state["complete"]:
-            self.state["code"] = requests.post("http://localhost:8000/debug_solution", json={
+            self.state["code"] = (await post("http://localhost:8000/debug_solution", json={
                 "problem": self.state["problem"],
                 "expected_output": self.state["expected_output"],
                 "code": self.state["code"],
                 "test_results": self.state["test_result"]
-            }).json()["code"]
+            }))["code"]
 
             self.state["iterations"] += 1
 
@@ -144,7 +146,7 @@ class HelloWorldPage(Page):
     def _activate_stage(self):
         self.state['stage'] = self.state['next_stage']
         
-    def on_code_execute_click(self, event):
-        self.state["output"] = requests.post("http://localhost:8000/execute", json={"code":self.state["code"]}).json()
+    async def on_code_execute_click(self, event):
+        self.state["output"] = await post("http://localhost:8000/execute", json={"code":self.state["code"]})
 
 app.mount("#app")

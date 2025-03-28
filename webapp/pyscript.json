@@ -8,8 +8,6 @@
       }
     },
     "packages": [
-      "puepy",
-      "requests",
-      "pyodide-http"
+      "https://files.pythonhosted.org/packages/75/9d/95bd54b735f887ba778b0ad0ebd8356df7791b2129c65c5a85f39892e521/puepy-0.6.5-py3-none-any.whl"
     ]
   }
